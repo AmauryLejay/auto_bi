@@ -14,10 +14,9 @@ In addition, python is becoming a mainstream language and has recently started t
 
 - Clone the project
 
-- Input new parameters in ```python main.py``` file 
+- Input new parameters in ```main.py``` file 
 
-- Then from the terminal run in the folder of the project where you stored your dataset as well. Arguments are detailled in the next point.
-```python main.py```
+- Then from the terminal run in the folder of the project where you stored your dataset as well ```python main.py```
 
 - Alternatively, run the following lines in a new file
 ```
@@ -81,6 +80,7 @@ print(df_entropy.head())
 	- [ ] Others 
 
 - [ ] Timestamps:
+	- [ ] See timestamp notebook in 'in progress' folder
 
 - [ ] Feature engineering: 
 	- [ ] Text features to clean
