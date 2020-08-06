@@ -1,6 +1,5 @@
 import pandas as pd
-from categorical_target_variable import categorical_target_variable
-import setting 
+from auto_bi import categorical_target_variable
 
 df = pd.read_csv("dataset/titanic.csv")
 target = "Survived" 

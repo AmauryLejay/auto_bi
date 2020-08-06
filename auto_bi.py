@@ -13,7 +13,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 
-import setting
 import yaml
 from box import Box # uselful to access yaml files like this config.group.subgroup instead of like this config['group']['subgroup']
 
@@ -113,7 +112,7 @@ class categorical_target_variable():
 	    if ratio >= self.config.threshold_main_col:
 	        threhold_met = True 
 	    
-	    col_with_missing_value = [col for col in self.df.columns.to_list() if self.df[col].isnull().sum()/self.df.shape[0] > setting.threshold_other_col] 
+	    col_with_missing_value = [col for col in self.df.columns.to_list() if self.df[col].isnull().sum()/self.df.shape[0] > self.config.threshold_other_col] 
 
 	    return self.id_col,threhold_met,missing_val_serie.to_dict(),col_with_missing_value
 
