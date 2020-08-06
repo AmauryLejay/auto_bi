@@ -56,6 +56,10 @@ cat.analyze()
 - [x] Basic KPIs (1/5)
 - [x] Most relevant features with regard to target feature
 
+[screenshot_1](https://github.com/AmauryLejay/auto_bi/blob/master/image/screenshot_1.png)
+
+[screenshot_2](https://github.com/AmauryLejay/auto_bi/blob/master/image/screenshot_2.png)
+
 
 ### To Do and Roadmap
 
@@ -90,4 +94,10 @@ cat.analyze()
 - [ ] Test (always)
 - [ ] Implement logging
 - [ ] Package library
+
+##### Logo
+
+- [ ] Find a new cute logo
+
+[minion](https://github.com/AmauryLejay/auto_bi/blob/master/image/logo_minion.png)
 
