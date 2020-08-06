@@ -1,11 +1,6 @@
-correlation_threshold: 0.5
-threshold_main_col: 0.01 
-# Threshold of missing values that the main col used for groupby count must meet to raise an alert
-threshold_other_col: 0.1 
-# Threshold of missing values that the other colmust meet to raise an alert
-base: 2 
-# logarithm base for entropy calculation
-nbr_quantile: 5 
-# quantile number for bining of numerical features
-
-
+threshold_main_col: 0.01 # Threshold of missing values that the main col used for groupby count must meet to raise an alert
+threshold_other_col: 0.1 # Threshold of missing values that the other colmust meet to raise an alert
+base: 2 # logarithm base for entropy calculation
+nbr_quantile: 5 # quantile number for bining of numerical features
+correlation_threshold: 0.5 # Threshold above which features are considered as highly correlated
+entropy_threshold: 0.9 # Threshold above which we visualize the feature VS target variable

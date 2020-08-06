@@ -7,46 +7,49 @@ import seaborn as sns
 import random 
 import warnings
 
+# Visualization
 import plotly.express as px
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
-
-import yaml
-from box import Box # uselful to access yaml files like this config.group.subgroup instead of like this config['group']['subgroup']
-
 import webbrowser
-
 from pages import (
     basic_kpis_only,
     analysis,
-)
-# TODO: _display_basic_kpi
+    )
+
+# Config
+import yaml
+from box import Box # uselful to access yaml files like this config.group.subgroup instead of like this config['group']['subgroup']
+
+
+# TODO: _display_basic_kpi + compare pandas profilling
 # TODO: imprive handling of missing values / Replace missing values strat? 
 # TODO: Handle case where there isn't any numerical or cat features 
 # TODO: Decide to potentially remove the features that are too correlated
 # TODO: Handle case where the main ID column for instance is changed, the functions that depend on its value need all to be re-run DONE 
 
-# To Do: Numerical target value 
-    # TODO: Handle entropy calculation when the target is not categorical DONE
-    # To Do: Numerical Value correlation / growth 
+# TODO: Numerical target value 
+# TODO: Handle entropy calculation when the target is not categorical DONE
+# TODO: Numerical Value correlation / growth 
 
-# To Do: Server visualisation (Dask)
-# To Do: Large Data Frame handling / Paralization
-# To Do: Library deployment
-    # Implement logging
+# TODO: Server visualisation (Dask)
+# TODO: Large Data Frame handling / Paralization
+# TODO: Library deployment
+# TODO: Implement logging
 
 # TODO: Target is not a column that we try to maximise, minimise or find correlation to, but rather a number of rows
-    # To Do: Visit Maximisation target value
+# TODO: Visit Maximisation target value
 
 # TODO: Feature Engineering Generator
-    # Decide how many features we choose for text
-    # To Do: Feature extractor (text) DONE
+# TODO: Decide how many features we choose for text
+# TODO: Feature extractor (text) DONE
 
 
 class categorical_target_variable():
-	"""Description"""
+	"""Main class so far, handling dataset that possess a categorical target variable to study (example famous titanic survived feature [0,1]).
+	The main function to call within it is analyse"""
 
 	def __init__(self, dataframe, target_variable, categorical_columns, numerical_col, id_col = None, config_path='./config.yml'):
 		
@@ -55,15 +58,16 @@ class categorical_target_variable():
 		self.target = target_variable # string
 		self.categorical_columns = categorical_columns # List
 		self.numerical_col = numerical_col # List
+		
+		# Optional parameters
 		self.config_path = config_path
+		self.id_col = id_col
 
 		# Will be generated throughout the analysis
-		self.entropy_threshold = 0.9
 		self.df_head = None
 		self.df_shape = None
 		self.df_target_count = None
 		self.df_target_describe = None
-		self.id_col = id_col
 		self.list_highly_correlated_features = None # List
 		self.categorical_columns_expended =  None # List 
 		self.df_feature_entropy = None # DataFrame
@@ -79,12 +83,14 @@ class categorical_target_variable():
 
 	def basic_kpi(self):
 		"""Calculate basic KPIs for our dataframe and target variable column
+		
+		input: None 
 
 		output: 
-		- dataframe - head of the main DataFrame
-		- tuple - (# of row, # of columns) of the maint DataFrame 
-		- dataframe - count of the different class of the target variable 
-		- dataframe - basic stats of the target variable column"""
+		- dataframe : head of the main DataFrame
+		- tuple : (# of row, # of columns) of the maint DataFrame 
+		- dataframe : count of the different class of the target variable 
+		- dataframe : basic stats of the target variable column"""
 
 		self.df_head = self.df.head()
 		self.df_shape = self.df.shape
@@ -94,12 +100,16 @@ class categorical_target_variable():
 		return self.df_head, self.df_shape, self.df_target_count, self.df_target_describe
 
 	def missing_values(self):
-	    '''
+	    """Defines what should be the most likely column to use as unique ID
+	    	Check that threshold of missing value are not met both for the ID column and for the other columns
+	
+		input: None 
+		   
 	    output: 
-	    - string : Name of the column to use for counts 
-	    - Boolean : True if too many missing value, 20% threshold met, False otherwise.
+	    - string : Name of the ID column to use
+	    - Boolean : True if too many missing value according to the threshold set in config, False otherwise.
 	    - dictionnary : missing value dict {column name : number of missing values}
-	    - list : name of the columns with missing values'''
+	    - list : name of the columns with missing values"""
 	   
 	    missing_val_serie = self.df.isnull().sum().sort_values()
 	    
@@ -119,11 +129,12 @@ class categorical_target_variable():
 	    return self.id_col,threhold_met,missing_val_serie.to_dict(),col_with_missing_value
 
 	def bining_numerical_columns(self):
-		"""Transform all the numerical columns to categorical, 
-		using the bining method, according to the q config parameter choosing the number of quartiles
+		"""Transform all the numerical columns to categorical, using the bining method, according to the q config parameter choosing the number of quartiles
 		
+		input: None
+
 		output:
-		- list -  names of newly created columns created from the numerical columns"""
+		- list : names of newly created columns created from the numerical columns"""
 
 		quantile = str(self.config.nbr_quantile)
 
@@ -139,6 +150,8 @@ class categorical_target_variable():
 	def extract_correlated_features(self):
 		"""Return features names which exceed the correlation threshold
 
+		input: None 
+		
 		output: 
 		- list -  names of features that could be removed"""
 
@@ -159,14 +172,16 @@ class categorical_target_variable():
 		return self.list_highly_correlated_features
 
 	def calculate_entropy(self, df_groupby):
-	    """
-		entropy calculation inspired from here https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
+	    """ 
+	    Returns the entropy for a given feauture. This serves to isolate features that provide the biggest information gain with respect to our target variable.
+	    entropy calculation inspired from here https://towardsdatascience.com/entropy-how-decision-trees-make-decisions-2946b9c18c8
 
 	    input: 
-	    - string : feature column name that we want to evaluate entropy on
+	    - dataframe : group by the feature that we want ot evaluate the entropy on df.groupby(by = feature)
 	    
 	    output:
-	    - float : entropy value of the splitting criteria belonging to [0-1] Goal is to reach a low entropy, with a low diversity.""" 
+	    - float : entropy value of the splitting criteria belonging to [0-1] Goal is to reach a low entropy, with a low diversity
+	     among within the target classes with respect to the feature evaluated.""" 
 	    	    
 	    total_entropy = 0
 	    count_total = df_groupby[self.id_col].sum()
@@ -195,10 +210,13 @@ class categorical_target_variable():
 	    return total_entropy
 
 	def categorical_feature_combinations(self):
-		"""
-		Calculates the entropy with respect to the target class of each features and combination of features
+		"""Calculates the entropy with respect to the target class of each features and combination of features
+
+		input : None 
+		
 		output:
-		- dictionnary - keys are feature name, values are the entropy with respect to the target variable"""
+		- dictionnary : keys are feature name, values are the entropy with respect to the target variable"""
+
 		dic_features_entropy = {}
 
 	    # Check that the ID column has been defined, otherwise find it or ask the user to input it himself.
@@ -239,15 +257,21 @@ class categorical_target_variable():
 
 		return self.df_feature_entropy
 
+
 	def analyse(self, visualise = True):
 		"""
-		input:
+		Method calling all the function above, returning at the moment an ordered dictionnary with the entropy measure value for each features.
+		Possible to change the ouput to other features.
+
+		optional input : Boolean True, will launch the Dash dashboard on web server False, will only return the df_feature_entropy
 
 		output: 
+		dataframe: df_feature_entropy with column name and entropy value  
+		dash interactive dashboard
 		"""
 		
 		def _run_everything():
-			
+
 			# Run basic KPIS
 			self.basic_kpi()
 
@@ -278,7 +302,7 @@ class categorical_target_variable():
 
 
 class visualisation(categorical_target_variable):
-	"""Description"""
+	"""Secondary class handling all the Dash interactive dashboard settings"""
 
 	def __init__(self, dataframe, target_variable, categorical_columns, numerical_col):
 		super().__init__(dataframe, target_variable, categorical_columns, numerical_col)
@@ -300,11 +324,11 @@ class visualisation(categorical_target_variable):
 			if pathname == "/auto_bi/basic_kpis_only":
 				return basic_kpis_only.create_layout(app, self.df_head,self.df_target_count)
 			elif pathname == "/auto_bi/analysis":
-				return analysis.create_layout(app,self.dic_groupby_df, self.df_feature_entropy, self.entropy_threshold,self.target,headers = True)
+				return analysis.create_layout(app,self.dic_groupby_df, self.df_feature_entropy, self.config.entropy_threshold,self.target,headers = True)
 			elif pathname == "/auto_bi/full-view":
 				return (
                     basic_kpis_only.create_layout(app, self.df_head,self.df_target_count),
-                    analysis.create_layout(app,self.dic_groupby_df, self.df_feature_entropy, self.entropy_threshold,self.target,headers = False),
+                    analysis.create_layout(app,self.dic_groupby_df, self.df_feature_entropy, self.config.entropy_threshold,self.target,headers = False),
                 )
 			else:
 				return basic_kpis_only.create_layout(app, self.df_head,self.df_target_count)
@@ -314,6 +338,8 @@ class visualisation(categorical_target_variable):
 		app.run_server(debug=True,port=8050)
 
 	def _display_correlation(self):
+		"""Display correlation matrix but not used at the moment"""
+
 		# Creating a mask to get rid of half of the correlation matrix 
 		mask = np.triu(np.ones_like(df_corr, dtype=np.bool))
 

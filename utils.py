@@ -85,7 +85,12 @@ def make_dash_table(df):
     return table
 
 def plotly_bar_chart(df_to_plot,target_value,feature_entropy_ranking,i):
+    """ Return a plotly bar chart
+    input : 
+
+    output: 
     
+    """
     # Change i to assign a unique value to i 
     i += 1
     
