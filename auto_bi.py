@@ -16,6 +16,8 @@ from dash.dependencies import Input, Output
 import yaml
 from box import Box # uselful to access yaml files like this config.group.subgroup instead of like this config['group']['subgroup']
 
+import webbrowser
+
 from pages import (
     basic_kpis_only,
     analysis,
@@ -308,8 +310,8 @@ class visualisation(categorical_target_variable):
 				return basic_kpis_only.create_layout(app, self.df_head,self.df_target_count)
 		
 		# Run Server
-		app.run_server(debug=True)
-
+		webbrowser.open('http://127.0.0.1:8050/auto_bi/analysis')
+		app.run_server(debug=True,port=8050)
 
 	def _display_correlation(self):
 		# Creating a mask to get rid of half of the correlation matrix 

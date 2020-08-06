@@ -14,24 +14,28 @@ In addition, python is becoming a mainstream language and has recently started t
 
 - Clone the project
 
-- Then from the terminal run in the folder of the project where you stored your dataset as well. Arguments are detailled in the next point.
-```python main.py ./dataset/titanic.csv Survived ['Pclass','Sex','SibSp','Embarked'] ./config.yml```
+- Input new parameters in ```python main.py``` file 
 
-- Alternatively, run the following lines in a new file or simply run the jupyer tutorial [here](https://github.com/AmauryLejay/auto_bi/blob/master/tutorial.ipynb)
+- Then from the terminal run in the folder of the project where you stored your dataset as well. Arguments are detailled in the next point.
+```python main.py```
+
+- Alternatively, run the following lines in a new file
 ```
 # Imports
-from categorical_target_variable import categorical_target_variable
 import pandas as pd
+from auto_bi import categorical_target_variable
 
-# Input
-df = pd.read_csv("dataset/titanic.csv")
-target = "Survived" 
-categorical_columns = ['Pclass','Sex','SibSp','Embarked']
-config_path='./config.yml'
+# Inputs
+df = pd.read_csv("dataset/titanic.csv") # file to process
+target = "Survived" # target column of interest - to be expanded later on (see To do later)
+categorical_columns = ['Pclass','Sex','SibSp','Embarked'] 
+numerical_columns = ['Age','Fare']
+config_path='./config.yml' # modify thresholds here
 
-# main run 
-cat = categorical_target_variable(df,target,categorical_columns,numerical_col,config_path = config_path)
-cat.analyze()
+# Main run
+cat = categorical_target_variable(df,target,categorical_columns,numerical_columns,config_path = config_path)
+df_entropy = cat.analyse()
+print(df_entropy.head())
 ```
 
 - Have fun! 

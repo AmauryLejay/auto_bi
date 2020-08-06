@@ -3,6 +3,7 @@ attrs==19.3.0
 backcall==0.1.0
 bleach==3.1.4
 blis==0.4.1
+calmap==0.0.7
 catalogue==1.0.0
 certifi==2020.4.5.1
 chardet==3.0.4
@@ -59,8 +60,10 @@ ptyprocess==0.6.0
 Pygments==2.6.1
 pyparsing==2.4.7
 pyrsistent==0.16.0
+python-box==5.1.0
 python-dateutil==2.8.1
 pytz==2019.3
+PyYAML==5.3.1
 pyzmq==19.0.0
 qtconsole==4.7.2
 QtPy==1.9.0
@@ -78,6 +81,8 @@ srsly==1.0.2
 stop-words==2018.7.23
 terminado==0.8.3
 testpath==0.4.4
+textblob==0.15.3
+textblob-fr==0.2.0
 thinc==7.4.0
 tornado==6.0.4
 tqdm==4.45.0
