@@ -56,9 +56,9 @@ cat.analyze()
 - [x] Basic KPIs (1/5)
 - [x] Most relevant features with regard to target feature
 
-[screenshot_1](https://github.com/AmauryLejay/auto_bi/blob/master/image/screenshot_1.png)
+[screenshot_1](https://github.com/AmauryLejay/auto_bi/blob/master/image/screenshot_1.png?raw=true)
 
-[screenshot_2](https://github.com/AmauryLejay/auto_bi/blob/master/image/screenshot_2.png)
+[screenshot_2](https://github.com/AmauryLejay/auto_bi/blob/master/image/screenshot_2.png?raw=true)
 
 
 ### To Do and Roadmap
@@ -99,5 +99,5 @@ cat.analyze()
 
 - [ ] Find a new cute logo
 
-[minion](https://github.com/AmauryLejay/auto_bi/blob/master/image/logo_minion.png)
+[minion](https://github.com/AmauryLejay/auto_bi/blob/master/image/logo_minion.png?raw=true)
 
